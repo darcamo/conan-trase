@@ -5,7 +5,7 @@ import os
 
 class TraseConan(ConanFile):
     name = "trase"
-    version = "2019-02-05-c1d09b7"
+    version = "2019-03-18-f877458f3bc6c0561d38d368783bde5bbfd41e0d"
     license = "BSD 3-Clause License"
     author = "Darlan Cavalcante Moreira (darcamo@gmail.com)"
     url = "https://github.com/darcamo/conan-trase"
@@ -16,7 +16,7 @@ class TraseConan(ConanFile):
     default_options = "shared=False"
     generators = "cmake"
     homepage = "https://github.com/trase-cpp/trase.git"
-    requires = "glfw/3.2.1@bincrafters/stable"
+    requires = "glfw/[>=3.3]@bincrafters/stable"
 
     def source(self):
         git = tools.Git(folder="sources")
@@ -37,6 +37,16 @@ conan_basic_setup()''')
 
         tools.replace_in_file("sources/CMakeLists.txt", "target_link_libraries (nanovg PUBLIC ${OPENGL_gl_LIBRARY} glfw dl)",
                               "target_link_libraries (nanovg PUBLIC ${OPENGL_gl_LIBRARY} ${CONAN_LIBS} dl)")
+
+    def system_requirements(self):
+        if tools.os_info.is_linux:
+            installer = tools.SystemPackageTool()
+            if tools.os_info.linux_distro == "arch":
+                # installer.install("????")
+                pass
+            else:
+                # For Ubuntu
+                installer.install("libgles2-mesa-dev")
 
     def build(self):
         os.mkdir("build")
